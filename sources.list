@@ -1,16 +1,16 @@
 # Debian
 ### STABLE
-deb [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian stable main contrib non-free
-deb-src [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian stable main contrib non-free
+deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian stable main contrib non-free
+deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian stable main contrib non-free
 ### TESTING
-deb [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian testing main contrib non-free
-deb-src [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian testing main contrib non-free
+deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian testing main contrib non-free
+deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian testing main contrib non-free
 ### UNSTABLE
-deb [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian unstable main contrib non-free
-deb-src [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian unstable main contrib non-free
+deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian unstable main contrib non-free
+deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian unstable main contrib non-free
 ### EXPERIMENTAL
-deb [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian experimental main contrib non-free
-deb-src [arch=amd64,i386] tor+vwakviie2ienjx6t.onion/debian experimental main contrib non-free
+deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian experimental main contrib non-free
+deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian experimental main contrib non-free
 
 # Devuan
 ## STABLE
