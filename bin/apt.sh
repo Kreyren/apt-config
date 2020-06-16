@@ -1,11 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# - Designed as POSIX sh, see POSIX comments for compatibility
 # Created by Jacob Hrbek <kreyren@rixotstudio.cz> under GPLv3 license <https://www.gnu.org/licenses/gpl-3.0.en.html> in 16/06/2020 14:09:21 CET
-
-# WARNING: This is a quick script
 
 # shellcheck shell=sh
 
-###! Script to update apt from a specified world file
+###! Wrapper designed for 'apt' for personal use
 ###! Requires:
 ###! - Command 'apt-get' for it's runtime
 ###! Exit codes:
@@ -35,6 +34,9 @@
 [ -z "$TR" ] && TR="tr"
 [ -z "$SED" ] && SED="sed"
 [ -z "$GREP" ] && GREP="grep"
+[ -z "$DPKG" ] && GREP="dpkg"
+[ -z "$APT_GET" ] && GREP="apt-get"
+[ -z "$TOR" ] && GREP="tor"
 
 # Customization of the output
 ## efixme
@@ -230,9 +232,7 @@ efixme() { funcname=efixme
 
 edebug "Resolving root on user with ID '$(id -u)"
 if [ "$(id -u)" = 0 ]; then
-	edebug "Script has been executed as user with ID 0, assuming root"
-	# NOTICE(Krey): We are prefixing root commands with '$SUDO', this is done to make sure that we are not using sudo here
-	unset SUDO
+	edebug "Script has been executed as user with ID 0, assuming root"	
 	funcname="$myName"
 	return 0
 # NOTICE(Krey): The ID 33333 is used by gitpod
@@ -240,13 +240,13 @@ elif [ "$(id -u)" = 1000 ] || [ "$(id -u)" = 33333 ]; then
 	ewarn "Script $myName is not expected to run as non-root, trying to elevate root.."
 	if command -v sudo 1>/dev/null; then
 		einfo "Found 'sudo' that can be used for root elevation"
-		SUDO=sudo
+		cmdPrefix="$cmdPrefix sudo"
 		funcname="$myName"
 		return 0
 	elif command -v su 1>/dev/null; then
 		einfo "Found 'su' that can be used for a root elevation"
 		ewarn "This will require the end-user to parse a root password multiple times assuming that root has a password set"
-		SUDO=su
+		cmdPrefix="$cmdPrefix su -c"
 		funcname="$myName"
 		return 0
 	elif ! command -v sudo 1>/dev/null && ! command -v su 1>/dev/null; then
@@ -260,19 +260,78 @@ else
 	die 3 "Unknown user ID '$(id -u)' has been parsed in script $myName"
 fi
 
-worldFile="/etc/apt/world"
+if command -v "$UNAME" 1>/dev/null; then
+	unameKernel="$("$UNAME" -s)"
+	edebug "Identified the kernel as '$unameKernel"
+	case "$unameKernel" in
+		Linux)
+			KERNEL="$unameKernel"
 
-# Check for worldFile
-if [ -f "$worldFile" ]; then
-	einfo "Creating a backup of current selections list in '$worldFile.bk'"
-	$SUDO dpkg --get-selections >> "$worldFile.bk" || die 1 "Unable to make a backup of original list
-	$SUDO dpkg --get-selections <( cat "$worldFile" | grep -v "^#.*") || die 1 "Unable to update new selections"
-elif [ ! -f "$worldFile" ]; then
-	eerror "File '$worldFile' doesn't not exists"
+			# Assume Linux Distro and release
+			# NOTICE(Krey): We are expecting this to return a lowercase value
+			if command -v "$LSB_RELEASE" 1>/dev/null; then
+				assumedDistro="$("$LSB_RELEASE" -si | "$TR" :[upper]: :[lower]:)"
+				assumedRelease="$("$LSB_RELEASE" -cs | "$TR" :[upper]: :[lower]:)"
+			elif ! command -v "$LSB_RELEASE" 1>/dev/null && [ -f /etc/os-release ]; then
+				assumedDistro="$("$GREP" -o "^ID\=.*" /etc/os-release | "$SED" s/ID=//gm)"
+				assumedRelease="$("$GREP" -o"^VERSION_CODENAME\=.*" /etc/os-release | "$SED" s/VERSION_CODENAME=//gm)"
+			elif ! command -v "$LSB_RELEASE" 1>/dev/null && [ ! -f /etc/os-release ]; then
+				die 1 "Unable to identify linux distribution using  command 'lsb_release' nor file '/etc/os-release'"
+			else
+				die 255 "attempting to assume linux distro and release"
+			fi
+
+			edebug "Identified distribution as '$assumedDistro'"
+			edebug "Identified distribution release as '$assumedRelease'"
+
+			# Verify Linux Distro
+			efixme "Add sanitization logic for other linux distributions"
+			case "$assumedDistro" in
+				ubuntu | debian | fedora | nixos | opensuse | gentoo | exherbo)
+					DISTRO="$assumedDistro"
+				;;
+				*) die fixme "Unexpected Linux distribution '$assumedDistro' has been detected."
+			esac
+
+			# Verify Linux Distro Release
+			efixme "Sanitize verification of linux distro release"
+			assumedRelease="$RELEASE"
+		;;
+		FreeBSD | Redox | Darwin | Windows)
+			KERNEL="$unameKernel"
+		;;
+		*) die 255 "Unexpected kernel '$unameKernel'"
+	esac
+elif ! command -v "$UNAME" 1>/dev/null; then
+	die 1 "Standard command '$UNAME' is not available on this system, unable to identify kernel"
 else
-	die 255 "processing '$worldFile'"
+	die 255 "Identifying system"
 fi
 
-$SUDO apt-get update || die 1 "Unable to update repositories"
-$SUDO apt-get upgrade -y || die 1 "Unable to upgrade the system"
-$SUDO apt-get dist-upgrade -y || die 1 "Unable to distribution upgrade the system"
+while [ "$#" -gt 0 ]; do case "$1" in
+	full-upgrade)
+		case "$KERNEL/$DISTRO-$RELEASE" in
+			linux/devuan-*)
+				worldFile="/etc/apt/world"
+
+				# Check for worldFile
+				if [ -f "$worldFile" ]; then
+					einfo "Creating a backup of current selections list in '$worldFile.bk'"
+					$cmdPrefix "$DPKG" --get-selections >> "$worldFile.bk" || die 1 "Unable to make a backup of original list"
+					# shellcheck disable=SC2039 # POSIX: Process substitutions are undefined in posix
+					$cmdPrefix "$DPKG" --get-selections <( cat "$worldFile" | grep -v "^\#.*") || die 1 "Unable to update new selections"
+				elif [ ! -f "$worldFile" ]; then
+					eerror "File '$worldFile' doesn't not exists"
+				else
+					die 255 "processing '$worldFile'"
+				fi
+
+				$cmdPrefix "$APT_GET" update || die 1 "Unable to update repositories"
+				$cmdPrefix "$APT_GET" upgrade -y || die 1 "Unable to upgrade the system"
+				$cmdPrefix "$APT_GET" dist-upgrade -y || die 1 "Unable to distribution upgrade the system"
+				shift 1 ;;
+			*) die fixme "Kernel '$KERNEL', Distro '$DISTRO', release '$RELEASE' was not tested, dieing for safety"
+		esac
+	;;
+	*) eerror "Command '$1' is not recognized by apt wrapper"
+esac; done
