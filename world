@@ -1,0 +1,45 @@
+# list generated from 'dpkg --get-selections' adapted to be used as 'world' file
+#
+# HOW-TO: dpkg --get-selections < ( cat /etc/apt/world | grep -v ^#.* )
+#
+# CORE
+apt-transport-tor:amd64				install
+openrc:amd64					install
+linux-image-liquorix-amd64:amd64		install
+linux-headers-liquorix-amd64:amd64		install
+grub2:amd64					install
+xfce4-session:amd64				install
+vim:amd64					install
+flameshot:amd64					install
+busybox:amd64					install
+dlocate:amd64					install
+xorg:amd64					install
+hexchat:amd64					install
+lightdm:amd64					install
+tor:amd64					install
+xfce4-terminal:amd64				install
+vlc:amd64					install
+sudo:amd64					install
+apt-utils:amd64					install
+suckless-tools:amd64				install
+dhcpcd5:amd64					install
+curl:amd64					install
+wget:amd64					install
+gnupg:amd64					install
+thunderbird:amd64				install
+apt-file:amd64					install
+iproute2:amd64					install
+less:amd64					install
+firefox-esr:amd64				install
+xfce4:amd64					install
+neofetch:amd64					install
+proxychains:amd64				install
+ntp:amd64					install
+composer:amd64					install
+xfce4-taskmanager:amd64				install
+winehq-staging:amd64				install
+pulseaudio:amd64				install
+htop:amd64					install
+xclip:amd64					install
+# UNWANTED
+systemd						deinstall

@@ -1,0 +1,65 @@
+# Directory used for pinning of the packages
+
+# WARNING: Each pin has to be separated by either new line or a comment
+
+# Codename compatibility DEBIAN<=>DEVUAN
+# - jessie = jessie
+# - stratch = ascii
+# - buster = beowulf
+# - bullseye = chimaera
+# - sid = ceres
+# - experimental = experimental
+
+# Exclude everything
+Package: *
+Pin: release n=*
+Pin-Priority: -1
+
+# Prefer Devuan over debian
+Package: *
+Pin: release o=devuan
+Pin-Priority: 991
+
+Package: *
+Pin: release o=debian
+Pin-Priority: 990
+
+# Exclude non-free targets
+Package: *
+Pin; release c=non-free
+Pin-Priority: -1
+
+## TESTING PINNING ##
+
+Package: *
+Pin: release a=testing
+Pin-Priority: -1
+
+# wine-staging
+Package: winehq-staging
+Pin: release a=testing
+Pin-Priority: 990
+
+# tor
+Package: tor
+Pin: release a=testing
+Pin-Priority: 990
+
+# firefox
+Package: firefox-esr
+Pin: release a=testing
+Pin-Priority: 990
+
+## UNSTABLE PINNING ##
+
+# Keep Ass XC
+Package: keepassxc
+Pin: release a=unstable
+Pin-Priority: 990
+
+## BLACKLIST ##
+
+# Fuck you Poettering
+Package: systemd elongind
+Pin: release n=*
+Pin-Priority: -1
