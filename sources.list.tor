@@ -1,41 +1,57 @@
+# WARNING: Do not use stable or testing sources on debian+devuan system since devuan may lag behind (https://www.devuan.org/os/releases)
+
+# Codename compatibility DEBIAN<=>DEVUAN
+# - jessie = jessie
+# - stratch = ascii
+# - buster = beowulf
+# - bullseye = chimaera
+# - sid = ceres (never changes)
+# - experimental = experimental
+
 # Debian
-### STABLE
-deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian stable main contrib non-free
-deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian stable main contrib non-free
-### TESTING
-deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian testing main contrib non-free
-deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian testing main contrib non-free
+### BUSTER
+#deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian buster main contrib non-free
+#deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian buster main contrib non-free
+### BULLSEYE
+#deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian bullseye main contrib non-free
+#deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian bullseye main contrib non-free
 ### UNSTABLE
-deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian unstable main contrib non-free
-deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian unstable main contrib non-free
+#deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian unstable main contrib non-free
+#deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian unstable main contrib non-free
 ### EXPERIMENTAL
-deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian experimental main contrib non-free
-deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian experimental main contrib non-free
+#deb [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian experimental main contrib non-free
+#deb-src [arch=amd64,i386] tor+http://vwakviie2ienjx6t.onion/debian experimental main contrib non-free
 
 # Devuan
+# WARNING: Do not use 'devuan.org/merged' because we are pinning the difference from debian
 ## STABLE
-deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan stable main contrib non-free
-deb-src [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan stable main contrib non-free
+#deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan beowulf main contrib non-free
+#deb-src [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan beowulf main contrib non-free
 ## TESTING
-deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan testing main contrib non-free
-deb-src [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan testing main contrib non-free
+deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan chimaera main contrib non-free
+deb-src [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan chimaera main contrib non-free
 ### UNSTABLE
 deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan unstable main contrib non-free
-deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan unstable main contrib non-free
+deb-src [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan unstable main contrib non-free
 ### EXPERIMENTAL
-deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan experimental main contrib non-free
-deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan experimental main contrib non-free
+#deb [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan experimental main contrib non-free
+#deb-src [arch=amd64,i386] tor+http://devuanfwojg73k6r.onion/devuan experimental main contrib non-free
 
 # Liquorix
 deb [arch=amd64,i386] tor+http://liquorix.net/debian stable main
 deb-src [arch=amd64,i386] tor+http://liquorix.net/debian stable main
 
 # WINEHQ
-deb [arch=amd64,i386] tor+https://dl.winehq.org/wine-builds/debian/ testing main
-deb-src [arch=amd64,i386] tor+https://dl.winehq.org/wine-builds/debian/ testing main
+# NOTICE: Winehq doesn't accept tor -_-
+### BUSTER
+#deb [arch=amd64,i386] https://dl.winehq.org/wine-builds/debian/ buster main
+#deb-src [arch=amd64,i386] https://dl.winehq.org/wine-builds/debian/ buster main
+### BULLSEYE
+deb [arch=amd64,i386] https://dl.winehq.org/wine-builds/debian/ bullseye main
+deb-src [arch=amd64,i386] https://dl.winehq.org/wine-builds/debian/ bullseye main
 
 # Steam
+# Fuck the steam and it's bloat, using flatpak sandbox instead
 # Wants libc6:i386 which attempting to install breaks the whole system
-deb [arch=amd64,i386] tor+http://repo.steampowered.com/steam/ stable steam
-deb-src [arch=amd64,i386] tor+http://repo.steampowered.com/steam/ stable steam
-
+#deb [arch=amd64,i386] tor+http://repo.steampowered.com/steam/ stable steam
+#deb-src [arch=amd64,i386] tor+http://repo.steampowered.com/steam/ stable steam
